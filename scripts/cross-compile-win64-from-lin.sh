@@ -21,7 +21,7 @@
 # Good luck!
 #
 
-if [ ! -d ../stkp-xp11-connectplugin ] ; then
+if [ ! -d ../STKPConnect ] ; then
    echo "Run this from STKPConnect subdirectory is. Read the comments in script."
    exit -1
 fi
