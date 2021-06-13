@@ -108,7 +108,7 @@ void TcpClient::readClient() {
                         } else if(ref->type() == stkpconnectRefTypeData) {
                             _refValueB[ref] = qobject_cast<DataDataRef*>(ref)->value();
                         }
-                        INFO << "Subscribed to " << ref->name() << ", accuracy " << accuracy << ", type " << ref->typeString() << ", valid " << ref->isValid();
+                        DEBUG << "Subscribed to " << ref->name() << ", accuracy " << accuracy << ", type " << ref->typeString() << ", valid " << ref->isValid();
                     }
                 } else { // Ref already subscribed - update accuracy
                     INFO << "Updating " << refName << " accuracy to " << accuracy;

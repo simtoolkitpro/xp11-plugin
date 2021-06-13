@@ -29,6 +29,11 @@ void TcpServer::setDataRefProvider(DataRefProvider *refProvider) {
     if(m_refProvider) {
         if(!server.listen(QHostAddress::Any, STKPCONNECT_PORT)) {
             INFO << "Unable to listen on port " << STKPCONNECT_PORT;
+
+            // Log the exact reason QtTcpServer is unable to listen on the port.
+            INFO << server.serverError();
+            INFO << server.errorString();
+
             return;
         }
         INFO << "Listening on port " << STKPCONNECT_PORT;
