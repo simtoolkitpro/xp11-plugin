@@ -23,6 +23,6 @@
  *
  * @see qCritical()
  */
-#define INFO qCritical() << "STKPConnect:" << Q_FUNC_INFO
+#define INFO qInfo() << "STKPConnect-Plugin:" << Q_FUNC_INFO
 
 #endif // CONSOLE_H

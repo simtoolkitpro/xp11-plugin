@@ -10,3 +10,4 @@ stkpconnect-server/libstkpconnect-server.a
 .qmake.stash
 stkpconnect-server/moc_predefs.h
 stkpconnect-plugin/moc_predefs.h
+.idea

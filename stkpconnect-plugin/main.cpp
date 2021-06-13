@@ -1,5 +1,9 @@
 #include <cstdlib>
+#include <QtGlobal>
+#include <QDateTime>
 #include <QDebug>
+#include <QFile>
+#include <QTextStream>
 #include <XPLMPlugin.h>
 #include <XPLMDataAccess.h>
 #include <XPLMProcessing.h>
@@ -7,6 +11,38 @@
 #include "console.h"
 
 XPlanePlugin *globalPlugin = nullptr;
+
+// Sets up a new Qt message handler for to handle logging for the plugin. Logs are outputted to
+// the file "stkpconnector.log" in the X-Plane root directory.
+void stkpConnectMessageHandler(QtMsgType type, const QMessageLogContext &, const QString & msg)
+{
+    QString dateTime = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
+    QString logMessage;
+    switch (type) {
+        case QtDebugMsg:
+            logMessage = QString("%1 DEBUG: %2").arg(dateTime, msg);
+            break;
+        case QtInfoMsg:
+            logMessage = QString("%1 INFO: %2").arg(dateTime, msg);
+            break;
+        case QtWarningMsg:
+            logMessage = QString("%1 WARNING: %2").arg(dateTime, msg);
+            break;
+        case QtCriticalMsg:
+            logMessage = QString("%1 CRITICAL: %2").arg(dateTime, msg);
+            break;
+        case QtFatalMsg:
+            logMessage = QString("%1 FATAL: %2").arg(dateTime, msg);
+            break;
+    }
+
+    // Output plugin logs to a file in <X-Plane root directory>/Output.
+    QFile outFile("Output/stkpconnector.log");
+    outFile.open(QIODevice::WriteOnly | QIODevice::Append);
+
+    QTextStream textStream(&outFile);
+    textStream << logMessage << endl;
+}
 
 PLUGIN_API float MyFlightLoopCallback(
         float inElapsedSinceLastCall,
@@ -25,6 +61,10 @@ PLUGIN_API int XPluginStart(
     XPLMRegisterFlightLoopCallback(MyFlightLoopCallback, 0.01f, NULL);
     Q_ASSERT(!globalPlugin);
     globalPlugin = new XPlanePlugin();
+
+    // Install custom message handler.
+    qInstallMessageHandler(stkpConnectMessageHandler);
+
     return globalPlugin->pluginStart(outName, outSig, outDesc);
 }
 
