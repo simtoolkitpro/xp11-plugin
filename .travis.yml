@@ -1,0 +1,17 @@
+sudo: required
+services:
+  - docker
+language: cpp
+compiler:
+- gcc
+before_install:
+ - docker build -t stkp .
+script: 
+ - docker run -it -v $PWD:/STKPConnect -w /STKPConnect stkp ./scripts/ci-build.sh
+branches:
+  only:
+  - master
+cache:
+  directories:
+  - ../XPlaneSDK
+
